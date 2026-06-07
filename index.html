@@ -1,22 +1,102 @@
-<!doctype html>
-<html lang="de">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Cocktail API</title>
-    <link rel="stylesheet" href="css/style.css" />
-  </head>
-  <body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Color Converter & Scheme Generator</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main>
     <header>
-      <h1>Vorlage für interaktive Medien II</h1>
+      <h1>Color Converter</h1>
+      <p>Convert RGB to HEX, HEX to RGB, and generate colour schemes from a seed colour using The Color API.</p>
     </header>
-    <main>
-      <h2>Main Content</h2>
-      <p>This is the main content of the page.</p>
-    </main>
-    <footer>
-      <p>This is the footer of the page.</p>
-    </footer>
-    <script src="js/script.js" type="module"></script>
-  </body>
+
+    <section class="grid">
+      <article class="card">
+        <h2>RGB to HEX</h2>
+
+        <div class="form-stack">
+          <div>
+            <label for="red">RGB values</label>
+            <div class="slider-control">
+              <span class="slider-label">R</span>
+              <input id="red" type="range" min="0" max="255" value="30" />
+              <span id="redValue" class="slider-value">30</span>
+            </div>
+          </div>
+
+          <div class="slider-control">
+            <span class="slider-label">G</span>
+            <input id="green" type="range" min="0" max="255" value="69" />
+            <span id="greenValue" class="slider-value">69</span>
+          </div>
+
+          <div class="slider-control">
+            <span class="slider-label">B</span>
+            <input id="blue" type="range" min="0" max="255" value="62" />
+            <span id="blueValue" class="slider-value">62</span>
+          </div>
+        </div>
+
+        <div id="rgbPreview" class="preview"></div>
+        <div id="rgbResult" class="result-box">#1E453E</div>
+      </article>
+
+      <article class="card">
+        <h2>HEX to RGB</h2>
+
+        <div class="form-stack">
+          <div>
+            <label for="hexInput">HEX colour</label>
+            <input id="hexInput" type="text" value="#1E453E" placeholder="#1E453E" />
+          </div>
+
+          <button id="hexToRgbBtn">Convert to RGB</button>
+        </div>
+
+        <div id="hexPreview" class="preview"></div>
+        <div id="hexResult" class="result-box">rgb(30, 69, 62)</div>
+      </article>
+
+      <article class="card full">
+        <h2>Scheme Generator</h2>
+
+        <div class="scheme-controls">
+          <div>
+            <label for="seedColor">Seed colour</label>
+            <input id="seedColor" type="color" value="#1e453e" />
+          </div>
+
+          <div>
+            <label for="schemeMode">Scheme mode</label>
+            <select id="schemeMode">
+              <option value="monochrome">Monochrome</option>
+              <option value="monochrome-dark">Monochrome Dark</option>
+              <option value="monochrome-light">Monochrome Light</option>
+              <option value="analogic" selected>Analogic</option>
+              <option value="complement">Complement</option>
+              <option value="analogic-complement">Analogic Complement</option>
+              <option value="triad">Triad</option>
+              <option value="quad">Quad</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="schemeCount">Count</label>
+            <input id="schemeCount" type="number" min="2" max="12" value="6" />
+          </div>
+        </div>
+
+        <button id="generateBtn">Generate scheme</button>
+
+        <div id="schemeStatus" class="loading"></div>
+        <div id="palette" class="palette"></div>
+      </article>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
 </html>
