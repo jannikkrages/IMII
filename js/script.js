@@ -5,66 +5,93 @@
 
 
 // ============================================================
-// 1. LOAD DOM ELEMENTS
-// We grab every element we need from the HTML once at the top.
+// 1. DOM ELEMENTS
 // ============================================================
 
-const hexInput      = document.querySelector('#hexInput');
-const hexBtn        = document.querySelector('#hexBtn');
-const hexResult     = document.querySelector('#hexResult');
+const hexInput       = document.querySelector('#hexInput');
+const hexBtn         = document.querySelector('#hexBtn');
+const hexResult      = document.querySelector('#hexResult');
 
-const rInput        = document.querySelector('#rInput');
-const gInput        = document.querySelector('#gInput');
-const bInput        = document.querySelector('#bInput');
-const rgbBtn        = document.querySelector('#rgbBtn');
-const rgbResult     = document.querySelector('#rgbResult');
+const rInput         = document.querySelector('#rInput');
+const gInput         = document.querySelector('#gInput');
+const bInput         = document.querySelector('#bInput');
+const rgbBtn         = document.querySelector('#rgbBtn');
+const rgbResult      = document.querySelector('#rgbResult');
 
-const colorPicker   = document.querySelector('#colorPicker');
+const colorPicker    = document.querySelector('#colorPicker');
 
 const schemeHexInput = document.querySelector('#schemeHexInput');
-const schemeMode    = document.querySelector('#schemeMode');
-const schemeBtn     = document.querySelector('#schemeBtn');
-const schemeResult  = document.querySelector('#schemeResult');
+const schemeMode     = document.querySelector('#schemeMode');
+const schemeBtn      = document.querySelector('#schemeBtn');
+const schemeResult   = document.querySelector('#schemeResult');
 
-const colorSwatch   = document.querySelector('#colorSwatch');
-const colorName     = document.querySelector('#colorName');
+const colorSwatch    = document.querySelector('#colorSwatch');
+const colorName      = document.querySelector('#colorName');
 
-const loader        = document.querySelector('#loader');
-const errorMsg      = document.querySelector('#errorMsg');
-
+const loader         = document.querySelector('#loader');
+const errorMsg       = document.querySelector('#errorMsg');
+const lottieSwatch   = document.querySelector('#lottieSwatch');
 
 
 // ============================================================
-// 2. HELPER FUNCTIONS
-// Small reusable functions that do one thing each.
+// LOTTIE ANIMATION
+// Plays in the preview card before a color is first chosen.
 // ============================================================
 
-// Show/hide the loading indicator
+const lottieAnim = lottie.loadAnimation({
+    container: lottieSwatch,
+    renderer: 'svg',
+    loop: true,
+    autoplay: true,
+    animationData: {"nm":"Flow 1","ddd":0,"h":500,"w":500,"meta":{"g":"LottieFiles Figma v112"},"layers":[{"ty":4,"nm":"Group 3","sr":1,"st":0,"op":121,"ip":0,"hd":false,"ddd":0,"bm":0,"hasMask":false,"ao":0,"ks":{"a":{"a":0,"k":[65,148]},"s":{"a":0,"k":[100,100]},"sk":{"a":0,"k":0},"p":{"a":1,"k":[{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[250,250],"t":0},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[250,250],"t":12},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[250,250],"t":30},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[250,250],"t":42},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[174.61,280.61],"t":60},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[174.61,280.61],"t":72},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[174.61,280.61],"t":90},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[174.61,280.61],"t":102},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[250,250],"t":120},{"s":[250,250],"t":132}]},"r":{"a":1,"k":[{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[0],"t":0},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[0],"t":12},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[0],"t":30},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[0],"t":42},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[-45],"t":60},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[-45],"t":72},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[-45],"t":90},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[-45],"t":102},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[0],"t":120},{"s":[0],"t":132}]},"sa":{"a":0,"k":0},"o":{"a":0,"k":100}},"shapes":[],"ind":1},{"ty":4,"nm":"Ellipse 1","sr":1,"st":0,"op":121,"ip":0,"hd":false,"ddd":0,"bm":0,"hasMask":false,"ao":0,"ks":{"a":{"a":0,"k":[25,25]},"s":{"a":0,"k":[100,100]},"sk":{"a":0,"k":0},"p":{"a":1,"k":[{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[70,260],"t":0},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[70,260],"t":12},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[70,260],"t":30},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[70,260],"t":42},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[64,262.49],"t":60},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[64,262.49],"t":72},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[64,262.49],"t":90},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[64,262.49],"t":102},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[70,260],"t":120},{"s":[70,260],"t":132}]},"r":{"a":0,"k":0},"sa":{"a":0,"k":0},"o":{"a":0,"k":100}},"shapes":[{"ty":"sh","bm":0,"hd":false,"nm":"","d":1,"ks":{"a":0,"k":{"c":true,"i":[[0,0],[10.495600000000001,0],[0,10.495600000000001],[-10.495600000000001,0],[0,-10.495600000000001]],"o":[[0,10.495600000000001],[-10.495600000000001,0],[0,-10.495600000000001],[10.495600000000001,0],[0,0]],"v":[[38,19],[19,38],[0,19],[19,0],[38,19]]}}},{"ty":"st","bm":0,"hd":false,"nm":"","lc":1,"lj":1,"ml":4,"o":{"a":0,"k":100},"w":{"a":1,"k":[{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[12],"t":0},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[12],"t":12},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[12],"t":30},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[12],"t":42},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[12],"t":60},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[12],"t":72},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[12],"t":90},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[12],"t":102},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[12],"t":120},{"s":[12],"t":132}]},"c":{"a":0,"k":[0.5,0.5,0.5]}},{"ty":"fl","bm":0,"hd":false,"nm":"","c":{"a":0,"k":[0.851,0.851,0.851]},"r":1,"o":{"a":0,"k":100}}],"ind":2,"parent":1},{"ty":4,"nm":"Rectangle 18","sr":1,"st":0,"op":121,"ip":0,"hd":false,"ddd":0,"bm":0,"hasMask":false,"ao":0,"ks":{"a":{"a":0,"k":[54,21.5]},"s":{"a":0,"k":[100,100]},"sk":{"a":0,"k":0},"p":{"a":0,"k":[64,194.5]},"r":{"a":0,"k":0},"sa":{"a":0,"k":0},"o":{"a":0,"k":100}},"shapes":[{"ty":"sh","bm":0,"hd":false,"nm":"","d":1,"ks":{"a":0,"k":{"c":true,"i":[[0,-3.31],[0,0],[3.31,0],[0,0],[0,3.31],[0,0],[-3.31,0],[0,0]],"o":[[0,0],[0,3.31],[0,0],[-3.31,0],[0,0],[0,-3.31],[0,0],[3.31,0]],"v":[[108,6],[108,37],[102,43],[6,43],[0,37],[0,6],[6,0],[102,0]]}}},{"ty":"fl","bm":0,"hd":false,"nm":"","c":{"a":0,"k":[0.9608,0.8744,0.2196]},"r":1,"o":{"a":0,"k":100}}],"ind":3,"parent":1},{"ty":4,"nm":"Rectangle 17","sr":1,"st":0,"op":121,"ip":0,"hd":false,"ddd":0,"bm":0,"hasMask":false,"ao":0,"ks":{"a":{"a":0,"k":[54,21.5]},"s":{"a":0,"k":[100,100]},"sk":{"a":0,"k":0},"p":{"a":0,"k":[64,141.5]},"r":{"a":0,"k":0},"sa":{"a":0,"k":0},"o":{"a":0,"k":100}},"shapes":[{"ty":"sh","bm":0,"hd":false,"nm":"","d":1,"ks":{"a":0,"k":{"c":true,"i":[[0,-3.31],[0,0],[3.31,0],[0,0],[0,3.31],[0,0],[-3.31,0],[0,0]],"o":[[0,0],[0,3.31],[0,0],[-3.31,0],[0,0],[0,-3.31],[0,0],[3.31,0]],"v":[[108,6],[108,37],[102,43],[6,43],[0,37],[0,6],[6,0],[102,0]]}}},{"ty":"fl","bm":0,"hd":false,"nm":"","c":{"a":0,"k":[0.851,0.2902,0.2996]},"r":1,"o":{"a":0,"k":100}}],"ind":4,"parent":1},{"ty":4,"nm":"Rectangle 16","sr":1,"st":0,"op":121,"ip":0,"hd":false,"ddd":0,"bm":0,"hasMask":false,"ao":0,"ks":{"a":{"a":0,"k":[54,21.5]},"s":{"a":0,"k":[100,100]},"sk":{"a":0,"k":0},"p":{"a":0,"k":[65,88.5]},"r":{"a":0,"k":0},"sa":{"a":0,"k":0},"o":{"a":0,"k":100}},"shapes":[{"ty":"sh","bm":0,"hd":false,"nm":"","d":1,"ks":{"a":0,"k":{"c":true,"i":[[0,-3.31],[0,0],[3.31,0],[0,0],[0,3.31],[0,0],[-3.31,0],[0,0]],"o":[[0,0],[0,3.31],[0,0],[-3.31,0],[0,0],[0,-3.31],[0,0],[3.31,0]],"v":[[108,6],[108,37],[102,43],[6,43],[0,37],[0,6],[6,0],[102,0]]}}},{"ty":"fl","bm":0,"hd":false,"nm":"","c":{"a":0,"k":[0.1902,0.6539,0.198]},"r":1,"o":{"a":0,"k":100}}],"ind":5,"parent":1},{"ty":4,"nm":"Rectangle 15","sr":1,"st":0,"op":121,"ip":0,"hd":false,"ddd":0,"bm":0,"hasMask":false,"ao":0,"ks":{"a":{"a":0,"k":[54,21.5]},"s":{"a":0,"k":[100,100]},"sk":{"a":0,"k":0},"p":{"a":0,"k":[64,35.5]},"r":{"a":0,"k":0},"sa":{"a":0,"k":0},"o":{"a":0,"k":100}},"shapes":[{"ty":"sh","bm":0,"hd":false,"nm":"","d":1,"ks":{"a":0,"k":{"c":true,"i":[[0,-3.31],[0,0],[3.31,0],[0,0],[0,3.31],[0,0],[-3.31,0],[0,0]],"o":[[0,0],[0,3.31],[0,0],[-3.31,0],[0,0],[0,-3.31],[0,0],[3.31,0]],"v":[[108,6],[108,37],[102,43],[6,43],[0,37],[0,6],[6,0],[102,0]]}}},{"ty":"fl","bm":0,"hd":false,"nm":"","c":{"a":0,"k":[0.2902,0.5647,0.851]},"r":1,"o":{"a":0,"k":100}}],"ind":6,"parent":1},{"ty":4,"nm":"Rectangle 14","sr":1,"st":0,"op":121,"ip":0,"hd":false,"ddd":0,"bm":0,"hasMask":false,"ao":0,"ks":{"a":{"a":0,"k":[65,148]},"s":{"a":0,"k":[100,100]},"sk":{"a":0,"k":0},"p":{"a":0,"k":[65,148]},"r":{"a":0,"k":0},"sa":{"a":0,"k":0},"o":{"a":0,"k":100}},"shapes":[{"ty":"sh","bm":0,"hd":false,"nm":"","d":1,"ks":{"a":0,"k":{"c":true,"i":[[0,0],[0,0],[0,0],[27.61,0],[0,0],[0,27.61],[0,0]],"o":[[0,0],[0,0],[0,27.61],[0,0],[-27.61,0],[0,0],[0,0]],"v":[[0,0],[130,0],[130,246],[80,296],[50,296],[0,246],[0,0]]}}},{"ty":"fl","bm":0,"hd":false,"nm":"","c":{"a":0,"k":[0.851,0.851,0.851]},"r":1,"o":{"a":0,"k":100}}],"ind":7,"parent":1},{"ty":4,"nm":"Group 4","sr":1,"st":0,"op":121,"ip":0,"hd":false,"ddd":0,"bm":0,"hasMask":false,"ao":0,"ks":{"a":{"a":0,"k":[65,148]},"s":{"a":0,"k":[100,100]},"sk":{"a":0,"k":0},"p":{"a":1,"k":[{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[250,250],"t":0},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[250,250],"t":12},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[324.61,281.61],"t":30},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[324.61,281.61],"t":42},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[324.61,281.61],"t":60},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[324.61,281.61],"t":72},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[250,250],"t":90},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[250,250],"t":102},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[250,250],"t":120},{"s":[250,250],"t":132}]},"r":{"a":1,"k":[{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[0],"t":0},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[0],"t":12},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[45],"t":30},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[45],"t":42},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[45],"t":60},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[45],"t":72},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[0],"t":90},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[0],"t":102},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[0],"t":120},{"s":[0],"t":132}]},"sa":{"a":0,"k":0},"o":{"a":0,"k":100}},"shapes":[],"ind":8},{"ty":4,"nm":"Ellipse 1","sr":1,"st":0,"op":121,"ip":0,"hd":false,"ddd":0,"bm":0,"hasMask":false,"ao":0,"ks":{"a":{"a":0,"k":[25,25]},"s":{"a":0,"k":[100,100]},"sk":{"a":0,"k":0},"p":{"a":1,"k":[{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[70,260],"t":0},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[70,260],"t":12},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[72.49,254],"t":30},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[72.49,254],"t":42},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[72.49,254],"t":60},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[72.49,254],"t":72},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[70,260],"t":90},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[70,260],"t":102},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[70,260],"t":120},{"s":[70,260],"t":132}]},"r":{"a":0,"k":0},"sa":{"a":0,"k":0},"o":{"a":0,"k":100}},"shapes":[{"ty":"sh","bm":0,"hd":false,"nm":"","d":1,"ks":{"a":0,"k":{"c":true,"i":[[0,0],[10.495600000000001,0],[0,10.495600000000001],[-10.495600000000001,0],[0,-10.495600000000001]],"o":[[0,10.495600000000001],[-10.495600000000001,0],[0,-10.495600000000001],[10.495600000000001,0],[0,0]],"v":[[38,19],[19,38],[0,19],[19,0],[38,19]]}}},{"ty":"st","bm":0,"hd":false,"nm":"","lc":1,"lj":1,"ml":4,"o":{"a":0,"k":100},"w":{"a":1,"k":[{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[12],"t":0},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[12],"t":12},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[12],"t":30},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[12],"t":42},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[12],"t":60},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[12],"t":72},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[12],"t":90},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[12],"t":102},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[12],"t":120},{"s":[12],"t":132}]},"c":{"a":0,"k":[0.5,0.5,0.5]}},{"ty":"fl","bm":0,"hd":false,"nm":"","c":{"a":0,"k":[0.851,0.851,0.851]},"r":1,"o":{"a":0,"k":100}}],"ind":9,"parent":8},{"ty":4,"nm":"Rectangle 18","sr":1,"st":0,"op":121,"ip":0,"hd":false,"ddd":0,"bm":0,"hasMask":false,"ao":0,"ks":{"a":{"a":0,"k":[54,21.5]},"s":{"a":0,"k":[100,100]},"sk":{"a":0,"k":0},"p":{"a":0,"k":[64,194.5]},"r":{"a":0,"k":0},"sa":{"a":0,"k":0},"o":{"a":0,"k":100}},"shapes":[{"ty":"sh","bm":0,"hd":false,"nm":"","d":1,"ks":{"a":0,"k":{"c":true,"i":[[0,-3.31],[0,0],[3.31,0],[0,0],[0,3.31],[0,0],[-3.31,0],[0,0]],"o":[[0,0],[0,3.31],[0,0],[-3.31,0],[0,0],[0,-3.31],[0,0],[3.31,0]],"v":[[108,6],[108,37],[102,43],[6,43],[0,37],[0,6],[6,0],[102,0]]}}},{"ty":"fl","bm":0,"hd":false,"nm":"","c":{"a":0,"k":[0.5779,0.2196,0.9608]},"r":1,"o":{"a":0,"k":100}}],"ind":10,"parent":8},{"ty":4,"nm":"Rectangle 17","sr":1,"st":0,"op":121,"ip":0,"hd":false,"ddd":0,"bm":0,"hasMask":false,"ao":0,"ks":{"a":{"a":0,"k":[54,21.5]},"s":{"a":0,"k":[100,100]},"sk":{"a":0,"k":0},"p":{"a":0,"k":[64,141.5]},"r":{"a":0,"k":0},"sa":{"a":0,"k":0},"o":{"a":0,"k":100}},"shapes":[{"ty":"sh","bm":0,"hd":false,"nm":"","d":1,"ks":{"a":0,"k":{"c":true,"i":[[0,-3.31],[0,0],[3.31,0],[0,0],[0,3.31],[0,0],[-3.31,0],[0,0]],"o":[[0,0],[0,3.31],[0,0],[-3.31,0],[0,0],[0,-3.31],[0,0],[3.31,0]],"v":[[108,6],[108,37],[102,43],[6,43],[0,37],[0,6],[6,0],[102,0]]}}},{"ty":"fl","bm":0,"hd":false,"nm":"","c":{"a":0,"k":[0.2902,0.8043,0.851]},"r":1,"o":{"a":0,"k":100}}],"ind":11,"parent":8},{"ty":4,"nm":"Rectangle 16","sr":1,"st":0,"op":121,"ip":0,"hd":false,"ddd":0,"bm":0,"hasMask":false,"ao":0,"ks":{"a":{"a":0,"k":[54,21.5]},"s":{"a":0,"k":[100,100]},"sk":{"a":0,"k":0},"p":{"a":0,"k":[65,88.5]},"r":{"a":0,"k":0},"sa":{"a":0,"k":0},"o":{"a":0,"k":100}},"shapes":[{"ty":"sh","bm":0,"hd":false,"nm":"","d":1,"ks":{"a":0,"k":{"c":true,"i":[[0,-3.31],[0,0],[3.31,0],[0,0],[0,3.31],[0,0],[-3.31,0],[0,0]],"o":[[0,0],[0,3.31],[0,0],[-3.31,0],[0,0],[0,-3.31],[0,0],[3.31,0]],"v":[[108,6],[108,37],[102,43],[6,43],[0,37],[0,6],[6,0],[102,0]]}}},{"ty":"fl","bm":0,"hd":false,"nm":"","c":{"a":0,"k":[0,0.9255,0.0155]},"r":1,"o":{"a":0,"k":100}}],"ind":12,"parent":8},{"ty":4,"nm":"Rectangle 15","sr":1,"st":0,"op":121,"ip":0,"hd":false,"ddd":0,"bm":0,"hasMask":false,"ao":0,"ks":{"a":{"a":0,"k":[54,21.5]},"s":{"a":0,"k":[100,100]},"sk":{"a":0,"k":0},"p":{"a":0,"k":[64,35.5]},"r":{"a":0,"k":0},"sa":{"a":0,"k":0},"o":{"a":0,"k":100}},"shapes":[{"ty":"sh","bm":0,"hd":false,"nm":"","d":1,"ks":{"a":0,"k":{"c":true,"i":[[0,-3.31],[0,0],[3.31,0],[0,0],[0,3.31],[0,0],[-3.31,0],[0,0]],"o":[[0,0],[0,3.31],[0,0],[-3.31,0],[0,0],[0,-3.31],[0,0],[3.31,0]],"v":[[108,6],[108,37],[102,43],[6,43],[0,37],[0,6],[6,0],[102,0]]}}},{"ty":"fl","bm":0,"hd":false,"nm":"","c":{"a":0,"k":[0.8871,0.547,0]},"r":1,"o":{"a":0,"k":100}}],"ind":13,"parent":8},{"ty":4,"nm":"Rectangle 14","sr":1,"st":0,"op":121,"ip":0,"hd":false,"ddd":0,"bm":0,"hasMask":false,"ao":0,"ks":{"a":{"a":0,"k":[65,148]},"s":{"a":0,"k":[100,100]},"sk":{"a":0,"k":0},"p":{"a":0,"k":[65,148]},"r":{"a":0,"k":0},"sa":{"a":0,"k":0},"o":{"a":0,"k":100}},"shapes":[{"ty":"sh","bm":0,"hd":false,"nm":"","d":1,"ks":{"a":0,"k":{"c":true,"i":[[0,0],[0,0],[0,0],[27.61,0],[0,0],[0,27.61],[0,0]],"o":[[0,0],[0,0],[0,27.61],[0,0],[-27.61,0],[0,0],[0,0]],"v":[[0,0],[130,0],[130,246],[80,296],[50,296],[0,246],[0,0]]}}},{"ty":"fl","bm":0,"hd":false,"nm":"","c":{"a":0,"k":[0.851,0.851,0.851]},"r":1,"o":{"a":0,"k":100}}],"ind":14,"parent":8},{"ty":4,"nm":"Group 5","sr":1,"st":0,"op":121,"ip":0,"hd":false,"ddd":0,"bm":0,"hasMask":false,"ao":0,"ks":{"a":{"a":0,"k":[65,148]},"s":{"a":0,"k":[100,100]},"sk":{"a":0,"k":0},"p":{"a":1,"k":[{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[250,250],"t":0},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[250,250],"t":12},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[177.24,278.91],"t":30},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[177.24,278.91],"t":42},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[250,250],"t":60},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[250,250],"t":72},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[341.67,304.29],"t":90},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[341.67,304.29],"t":102},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[250,250],"t":120},{"s":[250,250],"t":132}]},"r":{"a":1,"k":[{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[0],"t":0},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[0],"t":12},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[-43.69],"t":30},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[-43.69],"t":42},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[0],"t":60},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[0],"t":72},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[60],"t":90},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[60],"t":102},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[0],"t":120},{"s":[0],"t":132}]},"sa":{"a":0,"k":0},"o":{"a":0,"k":100}},"shapes":[],"ind":15},{"ty":4,"nm":"Ellipse 1","sr":1,"st":0,"op":121,"ip":0,"hd":false,"ddd":0,"bm":0,"hasMask":false,"ao":0,"ks":{"a":{"a":0,"k":[25,25]},"s":{"a":0,"k":[100,100]},"sk":{"a":0,"k":0},"p":{"a":1,"k":[{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[70,260],"t":0},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[70,260],"t":12},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[64.19,262.48],"t":30},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[64.19,262.48],"t":42},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[70,260],"t":60},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[70,260],"t":72},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[72.2,251.8],"t":90},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[72.2,251.8],"t":102},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[70,260],"t":120},{"s":[70,260],"t":132}]},"r":{"a":0,"k":0},"sa":{"a":0,"k":0},"o":{"a":0,"k":100}},"shapes":[{"ty":"sh","bm":0,"hd":false,"nm":"","d":1,"ks":{"a":0,"k":{"c":true,"i":[[0,0],[10.495600000000001,0],[0,10.495600000000001],[-10.495600000000001,0],[0,-10.495600000000001]],"o":[[0,10.495600000000001],[-10.495600000000001,0],[0,-10.495600000000001],[10.495600000000001,0],[0,0]],"v":[[38,19],[19,38],[0,19],[19,0],[38,19]]}}},{"ty":"st","bm":0,"hd":false,"nm":"","lc":1,"lj":1,"ml":4,"o":{"a":0,"k":100},"w":{"a":1,"k":[{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[12],"t":0},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[12],"t":12},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[12],"t":30},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[12],"t":42},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[12],"t":60},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[12],"t":72},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[12],"t":90},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[12],"t":102},{"o":{"x":0.33,"y":1},"i":{"x":0.68,"y":1},"s":[12],"t":120},{"s":[12],"t":132}]},"c":{"a":0,"k":[0.5,0.5,0.5]}},{"ty":"fl","bm":0,"hd":false,"nm":"","c":{"a":0,"k":[0.851,0.851,0.851]},"r":1,"o":{"a":0,"k":100}}],"ind":16,"parent":15},{"ty":4,"nm":"Rectangle 18","sr":1,"st":0,"op":121,"ip":0,"hd":false,"ddd":0,"bm":0,"hasMask":false,"ao":0,"ks":{"a":{"a":0,"k":[54,21.5]},"s":{"a":0,"k":[100,100]},"sk":{"a":0,"k":0},"p":{"a":0,"k":[64,194.5]},"r":{"a":0,"k":0},"sa":{"a":0,"k":0},"o":{"a":0,"k":100}},"shapes":[{"ty":"sh","bm":0,"hd":false,"nm":"","d":1,"ks":{"a":0,"k":{"c":true,"i":[[0,-3.31],[0,0],[3.31,0],[0,0],[0,3.31],[0,0],[-3.31,0],[0,0]],"o":[[0,0],[0,3.31],[0,0],[-3.31,0],[0,0],[0,-3.31],[0,0],[3.31,0]],"v":[[108,6],[108,37],[102,43],[6,43],[0,37],[0,6],[6,0],[102,0]]}}},{"ty":"fl","bm":0,"hd":false,"nm":"","c":{"a":0,"k":[0.1765,0.1844,0.2275]},"r":1,"o":{"a":0,"k":100}}],"ind":17,"parent":15},{"ty":4,"nm":"Rectangle 17","sr":1,"st":0,"op":121,"ip":0,"hd":false,"ddd":0,"bm":0,"hasMask":false,"ao":0,"ks":{"a":{"a":0,"k":[54,21.5]},"s":{"a":0,"k":[100,100]},"sk":{"a":0,"k":0},"p":{"a":0,"k":[64,141.5]},"r":{"a":0,"k":0},"sa":{"a":0,"k":0},"o":{"a":0,"k":100}},"shapes":[{"ty":"sh","bm":0,"hd":false,"nm":"","d":1,"ks":{"a":0,"k":{"c":true,"i":[[0,-3.31],[0,0],[3.31,0],[0,0],[0,3.31],[0,0],[-3.31,0],[0,0]],"o":[[0,0],[0,3.31],[0,0],[-3.31,0],[0,0],[0,-3.31],[0,0],[3.31,0]],"v":[[108,6],[108,37],[102,43],[6,43],[0,37],[0,6],[6,0],[102,0]]}}},{"ty":"fl","bm":0,"hd":false,"nm":"","c":{"a":0,"k":[0.5,0.5,0.5]},"r":1,"o":{"a":0,"k":100}}],"ind":18,"parent":15},{"ty":4,"nm":"Rectangle 16","sr":1,"st":0,"op":121,"ip":0,"hd":false,"ddd":0,"bm":0,"hasMask":false,"ao":0,"ks":{"a":{"a":0,"k":[54,21.5]},"s":{"a":0,"k":[100,100]},"sk":{"a":0,"k":0},"p":{"a":0,"k":[65,88.5]},"r":{"a":0,"k":0},"sa":{"a":0,"k":0},"o":{"a":0,"k":100}},"shapes":[{"ty":"sh","bm":0,"hd":false,"nm":"","d":1,"ks":{"a":0,"k":{"c":true,"i":[[0,-3.31],[0,0],[3.31,0],[0,0],[0,3.31],[0,0],[-3.31,0],[0,0]],"o":[[0,0],[0,3.31],[0,0],[-3.31,0],[0,0],[0,-3.31],[0,0],[3.31,0]],"v":[[108,6],[108,37],[102,43],[6,43],[0,37],[0,6],[6,0],[102,0]]}}},{"ty":"fl","bm":0,"hd":false,"nm":"","c":{"a":0,"k":[0.9255,0,0.3548]},"r":1,"o":{"a":0,"k":100}}],"ind":19,"parent":15},{"ty":4,"nm":"Rectangle 15","sr":1,"st":0,"op":121,"ip":0,"hd":false,"ddd":0,"bm":0,"hasMask":false,"ao":0,"ks":{"a":{"a":0,"k":[54,21.5]},"s":{"a":0,"k":[100,100]},"sk":{"a":0,"k":0},"p":{"a":0,"k":[64,35.5]},"r":{"a":0,"k":0},"sa":{"a":0,"k":0},"o":{"a":0,"k":100}},"shapes":[{"ty":"sh","bm":0,"hd":false,"nm":"","d":1,"ks":{"a":0,"k":{"c":true,"i":[[0,-3.31],[0,0],[3.31,0],[0,0],[0,3.31],[0,0],[-3.31,0],[0,0]],"o":[[0,0],[0,3.31],[0,0],[-3.31,0],[0,0],[0,-3.31],[0,0],[3.31,0]],"v":[[108,6],[108,37],[102,43],[6,43],[0,37],[0,6],[6,0],[102,0]]}}},{"ty":"fl","bm":0,"hd":false,"nm":"","c":{"a":0,"k":[0.0919,0.6371,0.5825]},"r":1,"o":{"a":0,"k":100}}],"ind":20,"parent":15},{"ty":4,"nm":"Rectangle 14","sr":1,"st":0,"op":121,"ip":0,"hd":false,"ddd":0,"bm":0,"hasMask":false,"ao":0,"ks":{"a":{"a":0,"k":[65,148]},"s":{"a":0,"k":[100,100]},"sk":{"a":0,"k":0},"p":{"a":0,"k":[65,148]},"r":{"a":0,"k":0},"sa":{"a":0,"k":0},"o":{"a":0,"k":100}},"shapes":[{"ty":"sh","bm":0,"hd":false,"nm":"","d":1,"ks":{"a":0,"k":{"c":true,"i":[[0,0],[0,0],[0,0],[27.61,0],[0,0],[0,27.61],[0,0]],"o":[[0,0],[0,0],[0,27.61],[0,0],[-27.61,0],[0,0],[0,0]],"v":[[0,0],[130,0],[130,246],[80,296],[50,296],[0,246],[0,0]]}}},{"ty":"fl","bm":0,"hd":false,"nm":"","c":{"a":0,"k":[0.851,0.851,0.851]},"r":1,"o":{"a":0,"k":100}}],"ind":21,"parent":15},{"ty":4,"nm":"Frame 1 Bg","sr":1,"st":0,"op":121,"ip":0,"hd":false,"ddd":0,"bm":0,"hasMask":false,"ao":0,"ks":{"a":{"a":0,"k":[250,250]},"s":{"a":0,"k":[100,100]},"sk":{"a":0,"k":0},"p":{"a":0,"k":[250,250]},"r":{"a":0,"k":0},"sa":{"a":0,"k":0},"o":{"a":0,"k":100}},"shapes":[{"ty":"sh","bm":0,"hd":false,"nm":"","d":1,"ks":{"a":0,"k":{"c":true,"i":[[0,-0.01],[0,0],[0.01,0],[0,0],[0,0.01],[0,0],[-0.01,0],[0,0]],"o":[[0,0],[0,0.01],[0,0],[-0.01,0],[0,0],[0,-0.01],[0,0],[0.01,0]],"v":[[500,0.01],[500,499.99],[499.99,500],[0.01,500],[0,499.99],[0,0.01],[0.01,0],[499.99,0]]}}},{"ty":"fl","bm":0,"hd":false,"nm":"","c":{"a":0,"k":[1,1,1]},"r":1,"o":{"a":0,"k":100}}],"ind":22}],"v":"5.7.0","fr":60,"op":120,"ip":0,"assets":[]}
+});
+
+let colorHasBeenSet = false;
+
+function dismissLottie() {
+    if (colorHasBeenSet) return;
+    colorHasBeenSet = true;
+    lottieSwatch.classList.add('hidden');
+    colorSwatch.classList.add('active');
+    // Stop and destroy after the fade-out transition finishes
+    setTimeout(() => lottieAnim.destroy(), 500);
+}
+
+
+// ============================================================
+// 2. HELPERS
+// ============================================================
+
 function showLoader() {
     loader.classList.add('visible');
 }
+
 function hideLoader() {
     loader.classList.remove('visible');
 }
 
-// Show an error message, hide after 3 seconds
 function showError(message) {
     errorMsg.textContent = message;
     errorMsg.classList.add('visible');
     setTimeout(() => errorMsg.classList.remove('visible'), 3000);
 }
 
-// Copy text to clipboard and show a little "Copied!" toast
+// Trigger a CSS animation class by removing it first so it can restart
+function triggerAnimation(el, className) {
+    el.classList.remove(className);
+    requestAnimationFrame(() => {
+        requestAnimationFrame(() => el.classList.add(className));
+    });
+}
+
 function copyToClipboard(text) {
     navigator.clipboard.writeText(text);
 
-    // Create a toast element, show it, then remove it
     const toast = document.createElement('div');
     toast.classList.add('toast');
     toast.textContent = `copied: ${text}`;
     document.body.appendChild(toast);
 
-    // Small delay so the CSS transition can play
     setTimeout(() => toast.classList.add('show'), 10);
     setTimeout(() => {
         toast.classList.remove('show');
@@ -72,70 +99,63 @@ function copyToClipboard(text) {
     }, 1800);
 }
 
-// Update the big color preview at the top (swatch + color name)
-// Wir fügen kurz die Klasse 'pop' hinzu -> CSS macht den Bounce-Effekt
 function updatePreview(hexColor, name) {
+    dismissLottie();
     colorSwatch.style.backgroundColor = hexColor;
     colorName.textContent = name || hexColor;
-
-    // Klasse entfernen falls sie noch läuft, dann neu setzen
-    colorSwatch.classList.remove('pop');
-    // requestAnimationFrame wartet einen einzelnen Frame -> Animation startet neu
-    requestAnimationFrame(() => {
-        requestAnimationFrame(() => colorSwatch.classList.add('pop'));
-    });
+    triggerAnimation(colorSwatch, 'pop');
     setTimeout(() => colorSwatch.classList.remove('pop'), 400);
 }
 
-// Make sure a hex string is valid (like #1a2b3c or 1a2b3c)
-function isValidHex(hex) {
-    const cleaned = hex.replace('#', '');
-    return /^[0-9A-Fa-f]{6}$/.test(cleaned);
+function showResult(el, html) {
+    el.innerHTML = html;
+    triggerAnimation(el, 'reveal');
+    el.querySelector('.copy-hint').addEventListener('click', function () {
+        copyToClipboard(this.dataset.copy);
+    });
 }
 
-// Make sure an RGB value is a number between 0 and 255
+function isValidHex(hex) {
+    return /^#?[0-9A-Fa-f]{6}$/.test(hex);
+}
+
 function isValidRgbValue(value) {
     const num = Number(value);
     return !isNaN(num) && num >= 0 && num <= 255;
 }
 
+function syncInputs(data) {
+    const hex = data.hex.value;
+    hexInput.value = hex;
+    schemeHexInput.value = hex;
+    rInput.value = data.rgb.r;
+    gInput.value = data.rgb.g;
+    bInput.value = data.rgb.b;
+}
+
 
 // ============================================================
-// 3. API FUNCTION
-// One central function that talks to The Color API.
-// It's async, which means it waits for the server response.
-//
-// WHAT IS async/await?
-// Normally JavaScript runs line by line without waiting.
-// When we talk to an API, we need to WAIT for the response.
-// "async" marks a function as one that can wait.
-// "await" pauses that function until we get the answer back.
+// 3. API
 // ============================================================
 
 async function fetchColorData(queryParam) {
-    // queryParam is something like "hex=1a2b3c" or "rgb=26,43,60"
     const url = `https://www.thecolorapi.com/id?${queryParam}&format=json`;
-
     showLoader();
-
     try {
-        const response = await fetch(url);       // Wait for the server
-        const data = await response.json();      // Wait to turn it into JS object
-
+        const response = await fetch(url);
+        const data = await response.json();
         hideLoader();
-        return data; // Return the color info to whoever called this function
-
-    } catch (error) {
+        return data;
+    } catch {
         hideLoader();
         showError('Could not connect to the Color API. Check your internet connection.');
-        return null; // Return null if something went wrong
+        return null;
     }
 }
 
 
 // ============================================================
 // 4. CONVERT HEX → RGB
-// Called when the user clicks "Convert" in the HEX → RGB card.
 // ============================================================
 
 async function convertHexToRgb() {
@@ -146,48 +166,24 @@ async function convertHexToRgb() {
         return;
     }
 
-    const cleanHex = hex.replace('#', '');
-    const data = await fetchColorData(`hex=${cleanHex}`);
+    const data = await fetchColorData(`hex=${hex.replace('#', '')}`);
+    if (!data) return;
 
-    if (!data) return; // fetchColorData already showed the error
+    const { r, g, b } = data.rgb;
+    const rgbString = `rgb(${r}, ${g}, ${b})`;
 
-    const rgb = data.rgb;
-    const name = data.name.value;
-    const fullHex = data.hex.value;
+    showResult(hexResult, `
+        ${rgbString}
+        <span class="copy-hint" data-copy="${rgbString}">copy</span>
+    `);
 
-    // Show the result with a copy hint
-    hexResult.innerHTML = `
-        rgb(${rgb.r}, ${rgb.g}, ${rgb.b})
-        <span class="copy-hint" data-copy="rgb(${rgb.r}, ${rgb.g}, ${rgb.b})">copy</span>
-    `;
-
-    // Reveal-Animation: Klasse kurz entfernen und neu setzen
-    hexResult.classList.remove('reveal');
-    requestAnimationFrame(() => {
-        requestAnimationFrame(() => hexResult.classList.add('reveal'));
-    });
-
-    // Add click to copy
-    hexResult.querySelector('.copy-hint').addEventListener('click', function() {
-        copyToClipboard(this.dataset.copy);
-    });
-
-    // Pre-fill RGB inputs for convenience
-    rInput.value = rgb.r;
-    gInput.value = rgb.g;
-    bInput.value = rgb.b;
-
-    // Update the color scheme input too
-    schemeHexInput.value = fullHex;
-
-    // Update the top preview
-    updatePreview(fullHex, name);
+    syncInputs(data);
+    updatePreview(data.hex.value, data.name.value);
 }
 
 
 // ============================================================
 // 5. CONVERT RGB → HEX
-// Called when the user clicks "Convert" in the RGB → HEX card.
 // ============================================================
 
 async function convertRgbToHex() {
@@ -201,68 +197,35 @@ async function convertRgbToHex() {
     }
 
     const data = await fetchColorData(`rgb=${r},${g},${b}`);
-
     if (!data) return;
 
     const hex = data.hex.value;
-    const name = data.name.value;
 
-    // Show the result
-    rgbResult.innerHTML = `
+    showResult(rgbResult, `
         ${hex}
         <span class="copy-hint" data-copy="${hex}">copy</span>
-    `;
+    `);
 
-    // Reveal-Animation
-    rgbResult.classList.remove('reveal');
-    requestAnimationFrame(() => {
-        requestAnimationFrame(() => rgbResult.classList.add('reveal'));
-    });
-
-    rgbResult.querySelector('.copy-hint').addEventListener('click', function() {
-        copyToClipboard(this.dataset.copy);
-    });
-
-    // Pre-fill hex input for convenience
-    hexInput.value = hex;
-
-    // Update the scheme input too
-    schemeHexInput.value = hex;
-
-    // Update the top preview
-    updatePreview(hex, name);
+    syncInputs(data);
+    updatePreview(hex, data.name.value);
 }
 
 
 // ============================================================
 // 6. COLOR PICKER
-// When the user uses the native color picker, we sync all inputs.
-// The 'input' event fires every time the color changes (live).
 // ============================================================
 
-colorPicker.addEventListener('input', async function() {
-    const hex = colorPicker.value; // e.g. "#4a90d9"
-    hexInput.value = hex;
-    schemeHexInput.value = hex;
-
-    // Also fetch to get RGB values and name
-    const cleanHex = hex.replace('#', '');
-    const data = await fetchColorData(`hex=${cleanHex}`);
-
+colorPicker.addEventListener('input', async function () {
+    const hex = colorPicker.value;
+    const data = await fetchColorData(`hex=${hex.replace('#', '')}`);
     if (!data) return;
-
-    rInput.value = data.rgb.r;
-    gInput.value = data.rgb.g;
-    bInput.value = data.rgb.b;
-
+    syncInputs(data);
     updatePreview(hex, data.name.value);
 });
 
 
 // ============================================================
 // 7. SCHEME GENERATOR
-// Fetches a color scheme from the API and renders the swatches.
-// Uses a DIFFERENT endpoint: /scheme instead of /id
 // ============================================================
 
 async function generateScheme() {
@@ -275,47 +238,34 @@ async function generateScheme() {
     }
 
     const cleanHex = hex.replace('#', '');
-    const count = 5; // How many colors to get back
-    const url = `https://www.thecolorapi.com/scheme?hex=${cleanHex}&mode=${mode}&count=${count}&format=json`;
+    const url = `https://www.thecolorapi.com/scheme?hex=${cleanHex}&mode=${mode}&count=5&format=json`;
 
     showLoader();
-    schemeResult.innerHTML = ''; // Clear old results
+    schemeResult.innerHTML = '';
 
     try {
         const response = await fetch(url);
         const data = await response.json();
         hideLoader();
 
-        // data.colors is an array of color objects
-        // We loop through each one and create a visual chip
-        data.colors.forEach(function(color, index) {
+        data.colors.forEach((color, index) => {
             const hex = color.hex.value;
             const name = color.name.value;
 
-            // Create the chip element
             const chip = document.createElement('div');
             chip.classList.add('scheme-chip');
-
-            // Build its inner HTML
             chip.innerHTML = `
                 <div class="scheme-color" style="background-color: ${hex}"></div>
                 <div class="scheme-hex">${hex}</div>
                 <div class="scheme-name">${name}</div>
             `;
-
-            // Clicking a chip copies the hex value
-            chip.addEventListener('click', function() {
-                copyToClipboard(hex);
-            });
-
+            chip.addEventListener('click', () => copyToClipboard(hex));
             schemeResult.appendChild(chip);
 
-            // Wellen-Eingang: jeder Chip bekommt einen etwas späteren Delay
-            // index * 80ms = 0ms, 80ms, 160ms, 240ms, 320ms
             setTimeout(() => chip.classList.add('visible'), index * 80);
         });
 
-    } catch (error) {
+    } catch {
         hideLoader();
         showError('Could not load color scheme. Check your internet connection.');
     }
@@ -323,47 +273,32 @@ async function generateScheme() {
 
 
 // ============================================================
-// 8. BUTTON EVENT LISTENERS
-// Connect the buttons to the functions above.
+// 8. EVENT LISTENERS
 // ============================================================
 
 hexBtn.addEventListener('click', convertHexToRgb);
 rgbBtn.addEventListener('click', convertRgbToHex);
 schemeBtn.addEventListener('click', generateScheme);
 
-// Also allow pressing Enter in the hex input
-hexInput.addEventListener('keydown', function(event) {
-    if (event.key === 'Enter') convertHexToRgb();
-});
-
-// Allow pressing Enter in any RGB input
-[rInput, gInput, bInput].forEach(function(input) {
-    input.addEventListener('keydown', function(event) {
-        if (event.key === 'Enter') convertRgbToHex();
-    });
-});
-
-schemeHexInput.addEventListener('keydown', function(event) {
-    if (event.key === 'Enter') generateScheme();
+hexInput.addEventListener('keydown', e => { if (e.key === 'Enter') convertHexToRgb(); });
+schemeHexInput.addEventListener('keydown', e => { if (e.key === 'Enter') generateScheme(); });
+[rInput, gInput, bInput].forEach(input => {
+    input.addEventListener('keydown', e => { if (e.key === 'Enter') convertRgbToHex(); });
 });
 
 
 // ============================================================
-// 9. INIT — Run on page load
-// Set a default color so the page doesn't look empty.
+// 9. INIT
 // ============================================================
 
 async function init() {
-    const defaultHex = '4a90d9';
-    const data = await fetchColorData(`hex=${defaultHex}`);
-
+    const data = await fetchColorData('hex=4a90d9');
     if (data) {
-        updatePreview(data.hex.value, data.name.value);
-        hexInput.value = data.hex.value;
-        schemeHexInput.value = data.hex.value;
-        rInput.value = data.rgb.r;
-        gInput.value = data.rgb.g;
-        bInput.value = data.rgb.b;
+        // Pre-fill inputs silently — don't dismiss the lottie on load
+        syncInputs(data);
+        // Set the swatch color in the background so it's ready when the user acts
+        colorSwatch.style.backgroundColor = data.hex.value;
+        colorName.textContent = data.name.value;
     }
 }
 

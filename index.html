@@ -6,6 +6,7 @@
     <title>Chroma — Color Converter</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
 </head>
 <body>
 
@@ -18,6 +19,7 @@
 
         <!-- COLOR PREVIEW -->
         <div class="color-preview-card" id="previewCard">
+            <div class="lottie-swatch" id="lottieSwatch"></div>
             <div class="color-swatch" id="colorSwatch"></div>
             <div class="color-name" id="colorName">Pick a color to start</div>
         </div>
@@ -94,11 +96,13 @@
             <div id="schemeResult" class="scheme-grid"></div>
         </section>
 
+        <!-- LOADER -->
         <div class="loader" id="loader">
-    <div class="loader-dot"></div>
-    <div class="loader-dot"></div>
-    <div class="loader-dot"></div>
-    </div>
+            <div class="loader-dot"></div>
+            <div class="loader-dot"></div>
+            <div class="loader-dot"></div>
+        </div>
+
         <!-- ERROR MESSAGE -->
         <div class="error-msg" id="errorMsg"></div>
 
