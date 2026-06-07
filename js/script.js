@@ -22,12 +22,15 @@ const colorPicker    = document.querySelector('#colorPicker');
 
 const schemeHexInput = document.querySelector('#schemeHexInput');
 const schemeMode     = document.querySelector('#schemeMode');
+const schemeCount    = document.querySelector('#schemeCount');
 const schemeBtn      = document.querySelector('#schemeBtn');
 const schemeResult   = document.querySelector('#schemeResult');
 
 const colorSwatch    = document.querySelector('#colorSwatch');
 const colorName      = document.querySelector('#colorName');
 
+const bgBlobLeft     = document.querySelector('#bgBlobLeft');
+const bgBlobRight    = document.querySelector('#bgBlobRight');
 const loader         = document.querySelector('#loader');
 const errorMsg       = document.querySelector('#errorMsg');
 const lottieSwatch   = document.querySelector('#lottieSwatch');
@@ -99,12 +102,19 @@ function copyToClipboard(text) {
     }, 1800);
 }
 
+function updateBlobs(hexColor) {
+    bgBlobLeft.style.setProperty('--blob-color', hexColor);
+    bgBlobRight.style.setProperty('--blob-color', hexColor);
+}
+
 function updatePreview(hexColor, name) {
     dismissLottie();
     colorSwatch.style.backgroundColor = hexColor;
     colorName.textContent = name || hexColor;
+    colorName.classList.add('named');
     triggerAnimation(colorSwatch, 'pop');
     setTimeout(() => colorSwatch.classList.remove('pop'), 400);
+    updateBlobs(hexColor);
 }
 
 function showResult(el, html) {
@@ -238,7 +248,8 @@ async function generateScheme() {
     }
 
     const cleanHex = hex.replace('#', '');
-    const url = `https://www.thecolorapi.com/scheme?hex=${cleanHex}&mode=${mode}&count=5&format=json`;
+    const count = Math.min(10, Math.max(2, parseInt(schemeCount.value) || 5));
+    const url = `https://www.thecolorapi.com/scheme?hex=${cleanHex}&mode=${mode}&count=${count}&format=json`;
 
     showLoader();
     schemeResult.innerHTML = '';

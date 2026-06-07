@@ -45,6 +45,37 @@ body {
   display: flex;
   justify-content: center;
   padding: 40px 16px 60px;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* ===========================
+   Background Blobs
+   =========================== */
+.bg-blob {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  width: clamp(60px, 8vw, 120px);
+  height: 60vh;
+  border-radius: 60px;
+  background: var(--blob-color, #c5c7ce);
+  box-shadow: var(--shadow-out);
+  transition: background 0.8s ease;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.bg-blob--left {
+  left: clamp(6px, 2vw, 40px);
+}
+.bg-blob--right {
+  right: clamp(6px, 2vw, 40px);
+}
+
+.app {
+  position: relative;
+  z-index: 1;
 }
 
 /* ===========================
@@ -96,6 +127,44 @@ header h1 {
   transition: box-shadow 0.5s ease;
 }
 
+.preview-left {
+  position: relative;
+  flex-shrink: 0;
+}
+
+/* Color name grows to fill space between swatch and picker */
+.color-name {
+  flex: 1;
+}
+
+/* Inline color picker — flush right */
+.preview-picker {
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-out);
+  cursor: pointer;
+  padding: 3px;
+  background: var(--surface);
+  flex-shrink: 0;
+  transition: box-shadow 0.2s ease;
+}
+
+.preview-picker:hover {
+  box-shadow: var(--shadow-btn);
+}
+
+.preview-picker::-webkit-color-swatch-wrapper {
+  padding: 2px;
+  border-radius: 6px;
+}
+
+.preview-picker::-webkit-color-swatch {
+  border: none;
+  border-radius: 6px;
+}
+
 /* Lottie placeholder — shown before any color is picked */
 .lottie-swatch {
   width: 60px;
@@ -137,6 +206,11 @@ header h1 {
   font-size: 0.9rem;
   color: var(--text-muted);
   font-weight: 400;
+  transition: color 0.4s ease;
+}
+
+.color-name.named {
+  color: var(--text);
 }
 
 /* ===========================
@@ -185,16 +259,27 @@ header h1 {
   gap: 12px;
 }
 
-.picker-card {
-  flex-direction: row;
-  align-items: center;
-  gap: 16px;
+/* Scheme options row */
+.scheme-options {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
 }
 
-.picker-hint {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  color: var(--text-muted);
+.scheme-option {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.scheme-option--count {
+  flex: 0 0 80px;
+}
+
+.scheme-option--count .input {
+  text-align: center;
+  padding: 12px 8px;
 }
 
 /* ===========================
@@ -246,29 +331,6 @@ header h1 {
   background-repeat: no-repeat;
   background-position: right 14px center;
   padding-right: 36px;
-}
-
-/* Color picker input */
-input[type="color"] {
-  width: 56px;
-  height: 56px;
-  border: none;
-  border-radius: var(--radius-sm);
-  box-shadow: var(--shadow-out);
-  cursor: pointer;
-  padding: 4px;
-  background: var(--surface);
-  flex-shrink: 0;
-}
-
-input[type="color"]::-webkit-color-swatch-wrapper {
-  padding: 2px;
-  border-radius: 6px;
-}
-
-input[type="color"]::-webkit-color-swatch {
-  border: none;
-  border-radius: 6px;
 }
 
 /* ===========================
