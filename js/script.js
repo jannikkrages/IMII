@@ -307,9 +307,9 @@ async function init() {
     if (data) {
         // Pre-fill inputs silently — don't dismiss the lottie on load
         syncInputs(data);
-        // Set the swatch color in the background so it's ready when the user acts
+        // Prime the swatch color so it's ready when the user first interacts
+        // but do NOT touch colorName — keep "Pick a color to start"
         colorSwatch.style.backgroundColor = data.hex.value;
-        colorName.textContent = data.name.value;
     }
 }
 
