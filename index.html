@@ -1,102 +1,109 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Color Converter & Scheme Generator</title>
-  <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chroma — Color Converter</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 </head>
 <body>
-  <main>
-    <header>
-      <h1>Color Converter</h1>
-      <p>Convert RGB to HEX, HEX to RGB, and generate colour schemes from a seed colour using The Color API.</p>
-    </header>
 
-    <section class="grid">
-      <article class="card">
-        <h2>RGB to HEX</h2>
+    <div class="app">
 
-        <div class="form-stack">
-          <div>
-            <label for="red">RGB values</label>
-            <div class="slider-control">
-              <span class="slider-label">R</span>
-              <input id="red" type="range" min="0" max="255" value="30" />
-              <span id="redValue" class="slider-value">30</span>
+        <header>
+            <h1>chroma</h1>
+            <p class="tagline">color conversion & scheme generator</p>
+        </header>
+
+        <!-- COLOR PREVIEW -->
+        <div class="color-preview-card" id="previewCard">
+            <div class="color-swatch" id="colorSwatch"></div>
+            <div class="color-name" id="colorName">Pick a color to start</div>
+        </div>
+
+        <!-- CONVERTER SECTION -->
+        <section class="section">
+            <h2 class="section-title">Convert</h2>
+
+            <!-- HEX TO RGB -->
+            <div class="card">
+                <label class="label">HEX → RGB</label>
+                <div class="input-row">
+                    <input
+                        type="text"
+                        id="hexInput"
+                        class="input"
+                        placeholder="#1a2b3c"
+                        maxlength="7"
+                    />
+                    <button class="btn" id="hexBtn">Convert</button>
+                </div>
+                <div class="result" id="hexResult"></div>
             </div>
-          </div>
 
-          <div class="slider-control">
-            <span class="slider-label">G</span>
-            <input id="green" type="range" min="0" max="255" value="69" />
-            <span id="greenValue" class="slider-value">69</span>
-          </div>
+            <!-- RGB TO HEX -->
+            <div class="card">
+                <label class="label">RGB → HEX</label>
+                <div class="input-row triple">
+                    <input type="number" id="rInput" class="input small" placeholder="R" min="0" max="255" />
+                    <input type="number" id="gInput" class="input small" placeholder="G" min="0" max="255" />
+                    <input type="number" id="bInput" class="input small" placeholder="B" min="0" max="255" />
+                    <button class="btn" id="rgbBtn">Convert</button>
+                </div>
+                <div class="result" id="rgbResult"></div>
+            </div>
+        </section>
 
-          <div class="slider-control">
-            <span class="slider-label">B</span>
-            <input id="blue" type="range" min="0" max="255" value="62" />
-            <span id="blueValue" class="slider-value">62</span>
-          </div>
+        <!-- COLOR PICKER (links both converters) -->
+        <div class="card picker-card">
+            <label class="label">Or pick a color</label>
+            <input type="color" id="colorPicker" value="#4a90d9" />
+            <span class="picker-hint">Tap to open color picker</span>
         </div>
 
-        <div id="rgbPreview" class="preview"></div>
-        <div id="rgbResult" class="result-box">#1E453E</div>
-      </article>
+        <!-- SCHEME GENERATOR SECTION -->
+        <section class="section">
+            <h2 class="section-title">Scheme Generator</h2>
+            <div class="card">
+                <label class="label">Seed Color (HEX)</label>
+                <input
+                    type="text"
+                    id="schemeHexInput"
+                    class="input"
+                    placeholder="#1a2b3c"
+                    maxlength="7"
+                />
 
-      <article class="card">
-        <h2>HEX to RGB</h2>
+                <label class="label" style="margin-top: 16px;">Mode</label>
+                <select id="schemeMode" class="input select">
+                    <option value="monochrome">Monochrome</option>
+                    <option value="monochrome-dark">Monochrome Dark</option>
+                    <option value="monochrome-light">Monochrome Light</option>
+                    <option value="analogic" selected>Analogic</option>
+                    <option value="complement">Complement</option>
+                    <option value="analogic-complement">Analogic Complement</option>
+                    <option value="triad">Triad</option>
+                    <option value="quad">Quad</option>
+                </select>
 
-        <div class="form-stack">
-          <div>
-            <label for="hexInput">HEX colour</label>
-            <input id="hexInput" type="text" value="#1E453E" placeholder="#1E453E" />
-          </div>
+                <button class="btn full" id="schemeBtn">Generate Scheme</button>
+            </div>
 
-          <button id="hexToRgbBtn">Convert to RGB</button>
-        </div>
+            <!-- SCHEME RESULT -->
+            <div id="schemeResult" class="scheme-grid"></div>
+        </section>
 
-        <div id="hexPreview" class="preview"></div>
-        <div id="hexResult" class="result-box">rgb(30, 69, 62)</div>
-      </article>
+        <div class="loader" id="loader">
+    <div class="loader-dot"></div>
+    <div class="loader-dot"></div>
+    <div class="loader-dot"></div>
+    </div>
+        <!-- ERROR MESSAGE -->
+        <div class="error-msg" id="errorMsg"></div>
 
-      <article class="card full">
-        <h2>Scheme Generator</h2>
+    </div>
 
-        <div class="scheme-controls">
-          <div>
-            <label for="seedColor">Seed colour</label>
-            <input id="seedColor" type="color" value="#1e453e" />
-          </div>
-
-          <div>
-            <label for="schemeMode">Scheme mode</label>
-            <select id="schemeMode">
-              <option value="monochrome">Monochrome</option>
-              <option value="monochrome-dark">Monochrome Dark</option>
-              <option value="monochrome-light">Monochrome Light</option>
-              <option value="analogic" selected>Analogic</option>
-              <option value="complement">Complement</option>
-              <option value="analogic-complement">Analogic Complement</option>
-              <option value="triad">Triad</option>
-              <option value="quad">Quad</option>
-            </select>
-          </div>
-
-          <div>
-            <label for="schemeCount">Count</label>
-            <input id="schemeCount" type="number" min="2" max="12" value="6" />
-          </div>
-        </div>
-
-        <button id="generateBtn">Generate scheme</button>
-
-        <div id="schemeStatus" class="loading"></div>
-        <div id="palette" class="palette"></div>
-      </article>
-    </section>
-  </main>
-
-  <script src="script.js"></script>
+    <script src="script.js" type="module"></script>
 </body>
 </html>
