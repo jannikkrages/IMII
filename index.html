@@ -26,7 +26,15 @@
                 <div class="color-swatch" id="colorSwatch"></div>
             </div>
             <div class="color-name" id="colorName">Pick a color to start</div>
-            <input type="color" id="colorPicker" value="#4a90d9" class="preview-picker" title="Pick a color" />
+            <div class="picker-btn-wrap" id="pickerBtnWrap">
+                <button class="picker-btn" id="pickerBtn" title="Pick a color" aria-label="Open color picker">
+                    <svg class="pipette-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20.71 5.63L18.37 3.29a1 1 0 0 0-1.41 0l-3.12 3.12-1.41-1.42-1.42 1.42 1.41 1.41-6.6 6.6A2 2 0 0 0 5 15.83V18a1 1 0 0 0 1 1h2.17a2 2 0 0 0 1.41-.59l6.6-6.6 1.41 1.42 1.42-1.42-1.42-1.41 3.12-3.12a1 1 0 0 0 0-1.65z" fill="currentColor"/>
+                        <circle cx="4.5" cy="20.5" r="1.5" fill="currentColor" opacity="0.5"/>
+                    </svg>
+                </button>
+                <input type="color" id="colorPicker" value="#4a90d9" class="picker-hidden-input" tabindex="-1" aria-hidden="true" />
+            </div>
         </div>
 
         <!-- CONVERTER SECTION -->

@@ -149,32 +149,87 @@ header h1 {
   flex: 1;
 }
 
-/* Inline color picker — flush right */
-.preview-picker {
+/* Pipette picker button */
+.picker-btn-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+/* Pulsing ring — visible until first color is chosen */
+.picker-btn-wrap::before {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border-radius: 16px;
+  border: 2px solid var(--accent);
+  opacity: 0;
+  animation: pickerPulse 2s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.picker-btn-wrap.color-chosen::before {
+  animation: none;
+  opacity: 0;
+}
+
+@keyframes pickerPulse {
+  0%,
+  100% {
+    opacity: 0;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.08);
+  }
+}
+
+.picker-btn {
   width: 44px;
   height: 44px;
   border: none;
   border-radius: var(--radius-sm);
-  box-shadow: var(--shadow-out);
-  cursor: pointer;
-  padding: 3px;
-  background: var(--surface);
-  flex-shrink: 0;
-  transition: box-shadow 0.2s ease;
-}
-
-.preview-picker:hover {
   box-shadow: var(--shadow-btn);
+  cursor: pointer;
+  background: var(--surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  transition:
+    box-shadow 0.15s ease,
+    color 0.15s ease,
+    transform 0.1s ease;
+  position: relative;
+  overflow: hidden;
 }
 
-.preview-picker::-webkit-color-swatch-wrapper {
-  padding: 2px;
-  border-radius: 6px;
+.picker-btn:hover {
+  color: var(--accent);
+  box-shadow: var(--shadow-out);
 }
 
-.preview-picker::-webkit-color-swatch {
+.picker-btn:active {
+  box-shadow: var(--shadow-btn-pressed);
+  transform: scale(0.97);
+}
+
+.pipette-icon {
+  width: 20px;
+  height: 20px;
+  pointer-events: none;
+}
+
+/* Hidden native color input — sits on top of button to receive clicks */
+.picker-hidden-input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
   border: none;
-  border-radius: 6px;
+  padding: 0;
 }
 
 /* Lottie placeholder — shown before any color is picked */
@@ -765,6 +820,11 @@ header h1 {
     gap: 8px;
   }
 
+  .scheme-option {
+    flex: unset;
+    width: 100%;
+  }
+
   .scheme-option--count {
     flex: unset;
     width: 100%;
@@ -775,7 +835,7 @@ header h1 {
     gap: 10px;
   }
 
-  .preview-picker {
+  .picker-btn {
     width: 38px;
     height: 38px;
   }
@@ -795,5 +855,10 @@ header h1 {
     animation: none !important;
     opacity: 1 !important;
     transform: none !important;
+  }
+
+  .picker-btn-wrap::before {
+    animation: none !important;
+    opacity: 0 !important;
   }
 }

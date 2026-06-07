@@ -19,6 +19,8 @@ const rgbBtn         = document.querySelector('#rgbBtn');
 const rgbResult      = document.querySelector('#rgbResult');
 
 const colorPicker    = document.querySelector('#colorPicker');
+const pickerBtnWrap  = document.querySelector('#pickerBtnWrap');
+const pickerBtn      = document.querySelector('#pickerBtn');
 
 const schemeHexInput = document.querySelector('#schemeHexInput');
 const schemeMode     = document.querySelector('#schemeMode');
@@ -56,6 +58,7 @@ function dismissLottie() {
     colorHasBeenSet = true;
     lottieSwatch.classList.add('hidden');
     colorSwatch.classList.add('active');
+    pickerBtnWrap.classList.add('color-chosen');
     // Stop and destroy after the fade-out transition finishes
     setTimeout(() => lottieAnim.destroy(), 500);
 }
@@ -224,6 +227,8 @@ async function convertRgbToHex() {
 // ============================================================
 // 6. COLOR PICKER
 // ============================================================
+
+pickerBtn.addEventListener('click', () => colorPicker.click());
 
 colorPicker.addEventListener('input', async function () {
     const hex = colorPicker.value;
